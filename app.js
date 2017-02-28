@@ -27,9 +27,36 @@ app.use('/users', users);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
+  'use strict'
+  let url = req.url,
+      natural = "",
+      unix = 0,
+      scan = /^[0-9]+$/,
+      readable = /,+/;
+      let thisDate;
+
+
+  url = url.slice(1)
+
+  if (scan.test(url) == true) {url = Number(url);}
+  if (readable.test(url) == true) {
+  	thisDate = new Date(Date.parse(url.replace(/(%20)/g, " ")))
+  	} else {
+  thisDate = new Date(url)
+  }
+	natural = thisDate.toString();
+	unix = thisDate.getTime();
+  let response = `{
+    Your entry: ${url}
+    "unix": ${unix}
+    "natural": ${natural}
+}`;
+  res.end(response)
+  /*
   var err = new Error('Not Found');
   err.status = 404;
   next(err);
+  */
 });
 
 // error handler
